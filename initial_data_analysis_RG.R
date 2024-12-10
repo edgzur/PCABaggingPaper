@@ -9,11 +9,11 @@ all_data <- read.csv("data.csv",
                      check.names = FALSE,
                      stringsAsFactors = FALSE)
 
-# cleaning up the column names so that they snake_case
+# remove net_income_flag since it has only one value: "1"
+
 colnames(all_data) <- tolower(gsub(" ", "_", colnames(all_data)))
 colnames(all_data) <- gsub("[?]", "", colnames(all_data))
 
-# remove net_income_flag since it has only one value: "1"
 all_data <- all_data %>% 
   select(-net_income_flag) 
 
@@ -28,20 +28,21 @@ print(class_counts)
 print(class_percentages)
 
 barplot <- barplot(class_counts,
-        main = "Class Imbalance",
+        main = "Class Distribution",
         xlab = "Class",
         ylab = "Count",
         col = c("skyblue", "salmon"),
-        cex.names = 2,
-        cex.axis = 2,
-        cex.lab = 2,
-        names.arg = c("Not Bankrupt", "Bankrupt"))
+        names.arg = c("Not Bankrupt", "Bankrupt"),
+        cex.main = 1.5,
+        cex.lab = 1.2,
+        ylim = c(0, max(class_counts) * 1.1))
 
 text(x = barplot, 
-     y = class_counts / 2,
+     y = class_counts + 350,
      label = paste0(round(class_percentages, 1), "%"), 
-     cex = 2, col = "black")
-
+     cex = 0.9,
+     font = 2,
+     col = "black")
 
 
 # DENSITY PLOTS
@@ -51,10 +52,9 @@ ggplot(all_data, aes(x = `tax_rate_(a)`, fill = bankrupt)) +
   labs(
     x = "Tax Rate",
     y = "Density",
-    fill = "Target (Bankrupt Status)"
+    fill = "Bankruptcy Status"
   ) +
-  scale_fill_manual(values = c("skyblue", "salmon"),
-                    labels = c("Non-Bankrupt", "Bankrupt")) +
+  scale_fill_manual(values = c("skyblue", "salmon"), labels = c("Non-Bankrupt", "Bankrupt")) +
   theme_minimal() +
   theme(text=element_text(size=20), #change font size of all text
         axis.text=element_text(size=12), #change font size of axis text
@@ -68,10 +68,9 @@ ggplot(all_data, aes(x = `total_asset_turnover`, fill = bankrupt)) +
   labs(
     x = "Total Asset Turnover",
     y = "Density",
-    fill = "Target (Bankrupt Status)"
+    fill = "Bankruptcy Status"
   ) +
-  scale_fill_manual(values = c("skyblue", "salmon"),
-                    labels = c("Non-Bankrupt", "Bankrupt")) +
+  scale_fill_manual(values = c("skyblue", "salmon"), labels = c("Non-Bankrupt", "Bankrupt")) +
   theme_minimal() +
   theme(text=element_text(size=20), #change font size of all text
         axis.text=element_text(size=10), #change font size of axis text
